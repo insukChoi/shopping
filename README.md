@@ -42,6 +42,8 @@ PASSWORD = (없음)
 ```
 
 ## 🚀 3. API 실행 예제
+API 요청을 테스트하려면 [client/client.http](client/client.http) 파일을 참고하세요.
+
 ### 1️⃣ 카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API
 ### ✅ 요청
 ```http request
@@ -261,6 +263,7 @@ HTTP/1.1 204
 - Exposed (Kotlin SQL library)
 - Kotest + Mockk + fixtureMonkey (테스트)
 - H2 (DB)
+- Gradle libs.versions.toml (버전 관리)
 
 ### ✅ 프로젝트 구조
 ```
