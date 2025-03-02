@@ -125,7 +125,7 @@ class ShoppingControllerTest : BehaviorSpec({
 
                 mockMvc.perform(
                     get("$URI/categories/prices/min-max")
-                        .param("categoryName", categoryName),
+                        .param("category_name", categoryName),
                 )
                     .andExpect(status().isOk)
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -156,7 +156,7 @@ class ShoppingControllerTest : BehaviorSpec({
 
                 mockMvc.perform(
                     get("$URI/categories/prices/min-max")
-                        .param("categoryName", categoryName),
+                        .param("category_name", categoryName),
                 )
                     .andExpect(status().isInternalServerError)
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON))

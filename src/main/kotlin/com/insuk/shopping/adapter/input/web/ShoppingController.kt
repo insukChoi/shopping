@@ -72,7 +72,7 @@ class ShoppingController(
      */
     @GetMapping("/categories/prices/min-max")
     fun categoryMinMaxPrices(
-        @RequestParam categoryName: String,
+        @RequestParam("category_name") categoryName: String,
     ): ResponseEntity<LowestAndHighestBrandWithPriceResponse> {
         val query = shoppingQueryInputPort.loadLowestAndHighestPriceBrands(categoryName)
         return ResponseEntity.ok(

@@ -29,8 +29,14 @@
 git clone https://github.com/insukChoi/shopping.git
 cd shopping
 
+## 서버
 ./gradlew clean build
 ./gradlew bootRun
+
+## 프론트
+cd src/ui
+npm install
+npm run dev
 ```
 ### ✅ H2 DB console 접속
 ```
@@ -152,7 +158,7 @@ GET /shopping/v1/brand/lowest-price
 ### 3️⃣ 카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API
 ### ✅ 요청
 ```http request
-GET /shopping/v1/categories/prices/min-max?categoryName=상의
+GET /shopping/v1/categories/prices/min-max?category_name=상의
 ```
 
 ### ✅ 응답 (200 OK)
@@ -177,8 +183,8 @@ POST /shopping/v1/product
 Content-Type: application/json
 
 {
-  "brandName": "J",
-  "categoryName": "벨트",
+  "brand_name": "J",
+  "category_name": "벨트",
   "price": 7000
 }
 ```
@@ -209,8 +215,8 @@ PATCH /shopping/v1/product
 Content-Type: application/json
 
 {
-  "brandName": "A",
-  "categoryName": "바지",
+  "brand_name": "A",
+  "category_name": "바지",
   "price": 2000
 }
 ```
@@ -241,8 +247,8 @@ DELETE /shopping/v1/product
 Content-Type: application/json
 
 {
-  "brandName": "J",
-  "categoryName": "벨트"
+  "brand_name": "J",
+  "category_name": "벨트"
 }
 ```
 
@@ -263,7 +269,8 @@ HTTP/1.1 204
 - Exposed (Kotlin SQL library)
 - Kotest + Mockk + fixtureMonkey (테스트)
 - H2 (DB)
-- Gradle libs.versions.toml (버전 관리)
+- Gradle + libs.versions.toml (버전 관리)
+- react + react-query (프론트 화면)
 
 ### ✅ 프로젝트 구조
 ```
@@ -286,3 +293,15 @@ src
 │   │   │   ├── data.sql  # 초기 데이터 삽입
 │   │   │   ├── schema.sql # DB 테이블 생성
 ```
+### ✅ 프론트 화면구성
+#### 1️⃣ 카테고리별 최저가격 브랜드와 가격 화면
+<img width="1495" alt="Image" src="https://github.com/user-attachments/assets/8dba4e2c-42df-428d-a99d-0a1c3bd5bab8" />
+
+#### 2️⃣ 단일 브랜드의 모든 카테고리 최저가격 화면
+<img width="1490" alt="Image" src="https://github.com/user-attachments/assets/308dd344-ffa8-4289-8d67-674171aaf3d8" />
+
+#### 3️⃣ 최저, 최고가격 브랜드와 가격 화면
+<img width="1498" alt="Image" src="https://github.com/user-attachments/assets/aa46290b-4e0a-4469-b592-35dd33e710af" />
+
+#### 4️⃣ 상품 추가/수정/삭제 관리 화면
+<img width="1165" alt="Image" src="https://github.com/user-attachments/assets/f9357208-08e8-471d-9d9e-916f2a21f377" />

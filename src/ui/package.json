@@ -1,0 +1,40 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "shopping frontend",
+  "scripts": {
+    "predev": "lsof -ti tcp:3000 | xargs kill -9",
+    "dev": "npm run start",
+    "start": "react-app-rewired start",
+    "test": "react-app-rewired test"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^4.21.3",
+    "antd": "^5.2.0",
+    "axios": "^1.8.1",
+    "axios-case-converter": "^1.1.1",
+    "customize-cra": "^1.0.0",
+    "query-string": "^9.1.1",
+    "react": "^18.2.0",
+    "react-router-dom": "^6.8.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.36.0",
+    "prettier": "^2.8.4",
+    "react-app-rewired": "^2.2.1"
+  },
+  "private": true,
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

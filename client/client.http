@@ -6,15 +6,15 @@ GET http://localhost:8080/shopping/v1/brand/lowest-price
 
 ### 구현 3) 카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API
 GET http://localhost:8080/shopping/v1/categories/prices/min-max?
-    categoryName=상의
+    category_name=상의
 
 ### 구현 4) 브랜드 및 상품 추가 API
 POST http://localhost:8080/shopping/v1/product
 Content-Type: application/json
 
 {
-  "brandName": "J",
-  "categoryName": "벨트",
+  "brand_name": "J",
+  "category_name": "벨트",
   "price": 7000
 }
 
@@ -23,8 +23,8 @@ PATCH http://localhost:8080/shopping/v1/product
 Content-Type: application/json
 
 {
-  "brandName": "A",
-  "categoryName": "바지",
+  "brand_name": "J",
+  "category_name": "벨트",
   "price": 2000
 }
 
@@ -33,6 +33,6 @@ DELETE http://localhost:8080/shopping/v1/product
 Content-Type: application/json
 
 {
-  "brandName": "J",
-  "categoryName": "벨트"
+  "brand_name": "J",
+  "category_name": "벨트"
 }
