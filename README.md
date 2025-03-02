@@ -8,9 +8,9 @@
     - (`GET /categories/lowest-price`)
 - **단일 브랜드로 모든 카테고리 상품을 구매할 때 최저가격에 판매하는 브랜드와 카테고리의 상품가격, 총액을
   조회하는 API**
-    - (`GET /brand/lowest-pric`)
+    - (`GET /brand/lowest-price`)
 - **카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API**
-    - (`GET /categories/prices/min-ma`)
+    - (`GET /categories/prices/min-max`)
 
 ### ✅ 상품 등록/수정/삭제 API
 - **브랜드 및 상품 추가 API**
