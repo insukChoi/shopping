@@ -26,7 +26,19 @@
 
 ### ✅ 코드 빌드 & 실행
 ```bash
-  ./gradlew clean build
+git clone https://github.com/insukChoi/shopping.git
+cd shopping
+
+./gradlew clean build
+./gradlew bootRun
+```
+### ✅ H2 DB console 접속
+```
+http://localhost:8080/h2-console/
+
+JDBC URL = jdbc:h2:mem:mydb
+USER NAME = sa
+PASSWORD = (없음)
 ```
 
 ## 🚀 3. API 실행 예제
