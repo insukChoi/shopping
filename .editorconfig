@@ -1,0 +1,14 @@
+root = true
+
+[*]
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{kt,kts}]
+indent_size = 4
+ij_kotlin_packages_to_use_import_on_demand = **
+ktlint_code_style=intellij_idea
+
+[*.{yml,yaml}]
+indent_size = 2
