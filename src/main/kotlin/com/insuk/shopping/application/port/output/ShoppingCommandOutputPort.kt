@@ -4,7 +4,6 @@ import java.math.BigDecimal
 
 typealias BrandId = Long
 typealias CategoryId = Long
-typealias ProductId = Long
 
 interface ShoppingCommandOutputPort {
     fun addBrand(brandName: String): BrandWithId
