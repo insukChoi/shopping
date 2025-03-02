@@ -1,3 +1,0 @@
-### 구현 1) - 카테고리 별 최저가격 브랜드와 상품 가격, 총액을 조회하는 API
-GET http://localhost:8080/shopping/v1/categories/lowest-price
-

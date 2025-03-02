@@ -138,9 +138,7 @@ GET /shopping/v1/brand/lowest-price
 ### 3️⃣ 카테고리 이름으로 최저, 최고 가격 브랜드와 상품 가격을 조회하는 API
 ### ✅ 요청
 ```http request
-###
-GET /shopping/v1/categories/prices/min-max?
-        categoryName=상의
+GET /shopping/v1/categories/prices/min-max?categoryName=상의
 ```
 
 ### ✅ 응답 (200 OK)
@@ -161,7 +159,6 @@ GET /shopping/v1/categories/prices/min-max?
 ### 4️⃣ 브랜드 및 상품 추가 API
 ### ✅ 요청
 ```http request
-###
 POST /shopping/v1/product
 Content-Type: application/json
 
@@ -194,7 +191,6 @@ Content-Type: application/json
 ### 5️⃣ 브랜드 및 상품 업데이트 API
 ### ✅ 요청
 ```http request
-###
 PATCH /shopping/v1/product
 Content-Type: application/json
 
@@ -227,7 +223,6 @@ Content-Type: application/json
 ### 6️⃣ 브랜드 및 상품 삭제 API
 ### ✅ 요청
 ```http request
-###
 DELETE /shopping/v1/product
 Content-Type: application/json
 
@@ -238,7 +233,7 @@ Content-Type: application/json
 ```
 
 ### ✅ 응답 (204 NO_CONTENT)
-```http request
+```
 HTTP/1.1 204
 
 <Response body is empty>
@@ -246,6 +241,7 @@ HTTP/1.1 204
 
 ## 📄 4. 기타 추가 정보
 ### ✅ 데이터베이스 ERD
+![Shopping ERD](shopping-erd.png)
 
 ### ✅ 기술 스택
 - Spring Boot 3.4.3

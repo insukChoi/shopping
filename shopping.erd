@@ -2,8 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json",
   "version": "3.0.0",
   "settings": {
-    "width": 2000,
-    "height": 2000,
+    "width": 2300,
+    "height": 2300,
     "scrollTop": 0,
     "scrollLeft": 0,
     "zoomLevel": 1,
