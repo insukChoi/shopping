@@ -25,5 +25,5 @@ enum class UseCaseErrorMessage(val errorMessage: String) {
 }
 
 enum class ValidationErrorMessage(val errorMessage: String) {
-    PRICE_NONE_POSITIVE_EXCEPTION("가격이 올바르지 않습니다.")
+    PRICE_NONE_POSITIVE_EXCEPTION("가격이 올바르지 않습니다."),
 }

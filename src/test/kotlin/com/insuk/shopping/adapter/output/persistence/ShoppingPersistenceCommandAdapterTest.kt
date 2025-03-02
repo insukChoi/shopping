@@ -16,35 +16,35 @@ internal class ShoppingPersistenceCommandAdapterTest(
     given("브랜드를 추가할 때") {
         `when`("브랜드 명이 주어지면") {
             then("브랜드가 추가 된다") {
-                val (brandId, brand) = shoppingCommandOutputPort.addBrand("H")
-                brandId.shouldNotBeNull()
-                brand.createdAt shouldBeBefore now()
-                brand.updatedAt shouldBeBefore now()
+                val brandWithId = shoppingCommandOutputPort.addBrand("H")
+                brandWithId.id.shouldNotBeNull()
+                brandWithId.createdAt shouldBeBefore now()
+                brandWithId.updatedAt shouldBeBefore now()
             }
         }
     }
     given("카테고리를 추가할 때") {
         `when`("카테고리 명이 주어지면") {
             then("카테고리가 추가 된다") {
-                val (categoryId, category) = shoppingCommandOutputPort.addCategory("시계")
-                categoryId.shouldNotBeNull()
-                category.createdAt shouldBeBefore now()
-                category.updatedAt shouldBeBefore now()
+                val categoryWithId = shoppingCommandOutputPort.addCategory("시계")
+                categoryWithId.id.shouldNotBeNull()
+                categoryWithId.createdAt shouldBeBefore now()
+                categoryWithId.updatedAt shouldBeBefore now()
             }
         }
     }
     given("상품을 추가할 때") {
         `when`("상품가격과 브랜드, 카테고리가 주어지면") {
             then("상품이 추가 된다") {
-                val (productId, productOnly) = shoppingCommandOutputPort.addProduct(
+                val productWithId = shoppingCommandOutputPort.addProduct(
                     price = 100.toBigDecimal(),
                     brandId = 1L,
                     categoryId = 1L,
                 )
-                productId.shouldNotBeNull()
-                productOnly.price shouldBeEqualIgnoringScale 100.toBigDecimal()
-                productOnly.createdAt shouldBeBefore now()
-                productOnly.updatedAt shouldBeBefore now()
+                productWithId.id.shouldNotBeNull()
+                productWithId.price shouldBeEqualIgnoringScale 100.toBigDecimal()
+                productWithId.createdAt shouldBeBefore now()
+                productWithId.updatedAt shouldBeBefore now()
             }
         }
     }
@@ -56,13 +56,13 @@ internal class ShoppingPersistenceCommandAdapterTest(
                 categoryId = 1L,
             )
             then("상품이 변경 된다") {
-                val (_, modifiedProductOnly) = shoppingCommandOutputPort.modifyProduct(
+                val productWithId = shoppingCommandOutputPort.modifyProduct(
                     price = 200.toBigDecimal(),
                     brandId = 1L,
                     categoryId = 1L,
                 )
 
-                modifiedProductOnly?.price?.shouldBeEqualIgnoringScale(200.toBigDecimal())
+                productWithId?.price?.shouldBeEqualIgnoringScale(200.toBigDecimal())
             }
         }
     }

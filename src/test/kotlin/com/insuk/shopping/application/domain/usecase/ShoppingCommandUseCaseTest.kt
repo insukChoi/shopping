@@ -1,16 +1,14 @@
 package com.insuk.shopping.application.domain.usecase
 
-import com.insuk.shopping.application.domain.model.Brand
-import com.insuk.shopping.application.domain.model.Category
-import com.insuk.shopping.application.domain.model.ProductOnly
 import com.insuk.shopping.application.port.input.ProductCommand
 import com.insuk.shopping.application.port.input.ProductDeleteCommand
-import com.insuk.shopping.application.port.output.ShoppingCommandOutputPort
-import com.insuk.shopping.application.port.output.ShoppingQueryOutputPort
+import com.insuk.shopping.application.port.output.*
 import com.insuk.shopping.exception.UseCaseErrorMessage.CAN_NOT_FIND_BRAND_EXCEPTION
 import com.insuk.shopping.exception.UseCaseErrorMessage.CAN_NOT_FIND_CATEGORY_EXCEPTION
 import com.insuk.shopping.fixtureMonkey
+import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
+import com.navercorp.fixturemonkey.kotlin.setExp
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.nulls.shouldBeNull
@@ -26,15 +24,17 @@ internal class ShoppingCommandUseCaseTest : BehaviorSpec({
     val shoppingCommandUseCase = ShoppingCommandUseCase(shoppingCommandOutputPort, shoppingQueryOutputPort)
 
     given("상품이 추가 될 때") {
-        val command = fixtureMonkey.giveMeOne<ProductCommand>()
+        val command = fixtureMonkey.giveMeBuilder<ProductCommand>()
+            .setExp(ProductCommand::price, 1000.toBigDecimal())
+            .sample()
         `when`("브랜드명과 카테고리명 가격이 주어지면") {
             then("브랜드, 카테고리, 상품이 추가된다") {
                 every { shoppingCommandOutputPort.addBrand(any()) } returns
-                    (1L to fixtureMonkey.giveMeOne<Brand>())
+                    fixtureMonkey.giveMeOne<BrandWithId>()
                 every { shoppingCommandOutputPort.addCategory(any()) } returns
-                    (1L to fixtureMonkey.giveMeOne<Category>())
+                    fixtureMonkey.giveMeOne<CategoryWIthId>()
                 every { shoppingCommandOutputPort.addProduct(any(), any(), any()) } returns
-                    (1L to fixtureMonkey.giveMeOne<ProductOnly>())
+                    fixtureMonkey.giveMeOne<ProductWithId>()
 
                 val result = shoppingCommandUseCase.addProduct(command)
 
@@ -45,14 +45,16 @@ internal class ShoppingCommandUseCaseTest : BehaviorSpec({
         }
     }
     given("상품이 업데이트 될 때") {
-        val command = fixtureMonkey.giveMeOne<ProductCommand>()
+        val command = fixtureMonkey.giveMeBuilder<ProductCommand>()
+            .setExp(ProductCommand::price, 1000.toBigDecimal())
+            .sample()
         `when`("브랜드명과 카테고리명 가격이 주어지면") {
             then("상품 정보가 업데이트 된다") {
-                every { shoppingQueryOutputPort.getBrandByBrandName(any()) } returns (1L to fixtureMonkey.giveMeOne<Brand>())
-                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns (1L to fixtureMonkey.giveMeOne<Category>())
+                every { shoppingQueryOutputPort.getBrandByBrandName(any()) } returns fixtureMonkey.giveMeOne<BrandWithId>()
+                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns fixtureMonkey.giveMeOne<CategoryWIthId>()
                 every {
                     shoppingCommandOutputPort.modifyProduct(any(), any(), any())
-                } returns (1L to fixtureMonkey.giveMeOne<ProductOnly>())
+                } returns fixtureMonkey.giveMeOne<ProductWithId>()
 
                 val result = shoppingCommandUseCase.updateProduct(command)
 
@@ -63,11 +65,11 @@ internal class ShoppingCommandUseCaseTest : BehaviorSpec({
         }
         `when`("업데이트 하려는 상품이 없으면") {
             then("null 로 return 한다") {
-                every { shoppingQueryOutputPort.getBrandByBrandName(any()) } returns (1L to fixtureMonkey.giveMeOne<Brand>())
-                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns (1L to fixtureMonkey.giveMeOne<Category>())
+                every { shoppingQueryOutputPort.getBrandByBrandName(any()) } returns fixtureMonkey.giveMeOne<BrandWithId>()
+                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns fixtureMonkey.giveMeOne<CategoryWIthId>()
                 every {
                     shoppingCommandOutputPort.modifyProduct(any(), any(), any())
-                } returns (null to null)
+                } returns null
 
                 val result = shoppingCommandUseCase.updateProduct(command)
 
@@ -76,7 +78,7 @@ internal class ShoppingCommandUseCaseTest : BehaviorSpec({
         }
         `when`("업데이트 하려는 브랜드가 없으면") {
             then("브랜드를 찾을 수 없다는 오류가 발생한다") {
-                every { shoppingQueryOutputPort.getBrandByBrandName(any()) } returns (null to null)
+                every { shoppingQueryOutputPort.getBrandByBrandName(any()) } returns null
 
                 shouldThrow<IllegalArgumentException> {
                     shoppingCommandUseCase.updateProduct(command)
@@ -85,8 +87,8 @@ internal class ShoppingCommandUseCaseTest : BehaviorSpec({
         }
         `when`("업데이트 하려는 카테고리가 없으면") {
             then("카테고리를 찾을 수 없다는 오류가 발생한다") {
-                every { shoppingQueryOutputPort.getBrandByBrandName(any()) } returns (1L to fixtureMonkey.giveMeOne<Brand>())
-                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns (null to null)
+                every { shoppingQueryOutputPort.getBrandByBrandName(any()) } returns fixtureMonkey.giveMeOne<BrandWithId>()
+                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns null
 
                 shouldThrow<IllegalArgumentException> {
                     shoppingCommandUseCase.updateProduct(command)
@@ -98,8 +100,8 @@ internal class ShoppingCommandUseCaseTest : BehaviorSpec({
         val command = fixtureMonkey.giveMeOne<ProductDeleteCommand>()
         `when`("브랜드명과 카테고리명 가격이 주어지면") {
             then("상품이 삭제 된다") {
-                every { shoppingQueryOutputPort.getBrandByBrandName(any()) } returns (1L to fixtureMonkey.giveMeOne<Brand>())
-                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns (1L to fixtureMonkey.giveMeOne<Category>())
+                every { shoppingQueryOutputPort.getBrandByBrandName(any()) } returns fixtureMonkey.giveMeOne<BrandWithId>()
+                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns fixtureMonkey.giveMeOne<CategoryWIthId>()
                 every {
                     shoppingCommandOutputPort.removeProduct(any(), any())
                 } returns true
@@ -107,7 +109,7 @@ internal class ShoppingCommandUseCaseTest : BehaviorSpec({
                 shoppingCommandUseCase.deleteProduct(command)
 
                 verify(exactly = 1) {
-                    shoppingCommandOutputPort.removeProduct(1L, 1L)
+                    shoppingCommandOutputPort.removeProduct(any(), any())
                 }
             }
         }

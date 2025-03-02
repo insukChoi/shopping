@@ -1,9 +1,9 @@
 package com.insuk.shopping.application.domain.usecase
 
-import com.insuk.shopping.application.domain.model.Category
 import com.insuk.shopping.application.domain.model.Product
 import com.insuk.shopping.application.domain.model.ProductOfBrandLowest
 import com.insuk.shopping.application.domain.model.ProductOfLowestAndHighestPriceBrands
+import com.insuk.shopping.application.port.output.CategoryWIthId
 import com.insuk.shopping.application.port.output.ShoppingQueryOutputPort
 import com.insuk.shopping.exception.UseCaseErrorMessage.*
 import com.insuk.shopping.exception.UseCaseException
@@ -142,19 +142,19 @@ internal class ShoppingQueryUseCaseTest : BehaviorSpec({
         `when`("카테고리 ID를 가져오면") {
             then("해당 카테고리 ID의 최저,초괴 가격의 브랜드와 상품이 조회된다") {
                 val productOfLowestAndHighestPriceBrands = fixtureMonkey.giveMeOne<ProductOfLowestAndHighestPriceBrands>()
-                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns (1L to fixtureMonkey.giveMeOne<Category>())
-                every { shoppingQueryOutputPort.getLowestAndHighestPriceBrands(1L) } returns productOfLowestAndHighestPriceBrands
+                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns fixtureMonkey.giveMeOne<CategoryWIthId>()
+                every { shoppingQueryOutputPort.getLowestAndHighestPriceBrands(any()) } returns productOfLowestAndHighestPriceBrands
 
                 val result = shoppingQueryUseCase.loadLowestAndHighestPriceBrands("상의")
                 result shouldBe productOfLowestAndHighestPriceBrands
 
                 verify(exactly = 1) { shoppingQueryOutputPort.getCategoryByCategoryName(any()) }
-                verify(exactly = 1) { shoppingQueryOutputPort.getLowestAndHighestPriceBrands(1L) }
+                verify(exactly = 1) { shoppingQueryOutputPort.getLowestAndHighestPriceBrands(any()) }
             }
         }
         `when`("카테고리 명으로 ID를 찾을 수 없으면") {
             then("카테고리 ID를 찾을 수 없다는 예외 발생") {
-                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns (null to null)
+                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns null
 
                 val exception =
                     shouldThrow<IllegalArgumentException> {
@@ -166,9 +166,9 @@ internal class ShoppingQueryUseCaseTest : BehaviorSpec({
         }
         `when`("getLowestAndHighestPriceBrands()에서 예외 발생") {
             then("UseCaseException으로 변환되어야 한다") {
-                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns (1L to fixtureMonkey.giveMeOne<Category>())
+                every { shoppingQueryOutputPort.getCategoryByCategoryName(any()) } returns fixtureMonkey.giveMeOne<CategoryWIthId>()
                 every {
-                    shoppingQueryOutputPort.getLowestAndHighestPriceBrands(1L)
+                    shoppingQueryOutputPort.getLowestAndHighestPriceBrands(any())
                 } throws RuntimeException()
 
                 val exception =

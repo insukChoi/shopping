@@ -1,6 +1,8 @@
 package com.insuk.shopping.application.port.output
 
-import com.insuk.shopping.application.domain.model.*
+import com.insuk.shopping.application.domain.model.Product
+import com.insuk.shopping.application.domain.model.ProductOfBrandLowest
+import com.insuk.shopping.application.domain.model.ProductOfLowestAndHighestPriceBrands
 import java.math.BigDecimal
 
 interface ShoppingQueryOutputPort {
@@ -15,9 +17,9 @@ interface ShoppingQueryOutputPort {
 
     fun getProductOfLowestBrandByBrandId(brandId: Long): ProductOfBrandLowest
 
-    fun getCategoryByCategoryName(categoryName: String): Pair<CategoryId?, Category?>
+    fun getCategoryByCategoryName(categoryName: String): CategoryWIthId?
 
-    fun getBrandByBrandName(brandName: String): Pair<BrandId?, Brand?>
+    fun getBrandByBrandName(brandName: String): BrandWithId?
 
     fun getLowestAndHighestPriceBrands(categoryId: Long): ProductOfLowestAndHighestPriceBrands
 }

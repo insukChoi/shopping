@@ -12,10 +12,7 @@ import com.insuk.shopping.exception.GlobalExceptionHandler
 import com.insuk.shopping.exception.UseCaseErrorMessage.*
 import com.insuk.shopping.exception.UseCaseException
 import com.insuk.shopping.fixtureMonkey
-import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
-import com.navercorp.fixturemonkey.kotlin.giveMeOne
-import com.navercorp.fixturemonkey.kotlin.setNotNullExp
-import com.navercorp.fixturemonkey.kotlin.sizeExp
+import com.navercorp.fixturemonkey.kotlin.*
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.*
 import io.mockk.junit5.MockKExtension
@@ -170,7 +167,9 @@ class ShoppingControllerTest : BehaviorSpec({
         }
     }
     given("브랜드 및 상품 추가 API 를 호출할 때") {
-        val productRequest = fixtureMonkey.giveMeOne<ProductRequest>()
+        val productRequest = fixtureMonkey.giveMeBuilder<ProductRequest>()
+            .setExp(ProductRequest::price, 1000.toBigDecimal())
+            .sample()
         val product = fixtureMonkey.giveMeOne<Product>()
         `when`("정상적으로 추가되면") {
             then("201 응답과 함께 상품이 추가된다") {
@@ -206,7 +205,9 @@ class ShoppingControllerTest : BehaviorSpec({
         }
     }
     given("브랜드 및 상품 업데이트 API 를 호출할 때") {
-        val productRequest = fixtureMonkey.giveMeOne<ProductRequest>()
+        val productRequest = fixtureMonkey.giveMeBuilder<ProductRequest>()
+            .setExp(ProductRequest::price, 1000.toBigDecimal())
+            .sample()
         val product = fixtureMonkey.giveMeOne<Product>()
         `when`("정상적으로 변경되면") {
             then("200 응답과 변경된 상품이 조회된다") {

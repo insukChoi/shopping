@@ -11,7 +11,6 @@ import io.kotest.matchers.bigdecimal.shouldBeEqualIgnoringScale
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.nulls.shouldBeNull
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.jetbrains.exposed.sql.insert
@@ -78,10 +77,10 @@ class ShoppingPersistenceQueryAdapterTest(
         `when`("카테고리 명으로 카테고리 ID 조회하면") {
             then("카테고리 ID가 조회된다") {
                 transaction(TestDatabaseConfig.database) {
-                    val (categoryId, category) = shoppingQueryOutputPort.getCategoryByCategoryName("상의")
+                    val categoryWithId = shoppingQueryOutputPort.getCategoryByCategoryName("상의")
 
-                    categoryId shouldBe 1L
-                    category.shouldNotBeNull()
+                    categoryWithId?.id shouldBe 1L
+                    categoryWithId?.name?.shouldBeEqual("상의")
                 }
             }
         }
@@ -114,10 +113,10 @@ class ShoppingPersistenceQueryAdapterTest(
         `when`("브랜드 명으로 브랜드 ID 조회하면") {
             then("브랜드 ID가 조회된다") {
                 transaction(TestDatabaseConfig.database) {
-                    val (brandId, brand) = shoppingQueryOutputPort.getBrandByBrandName("A")
+                    val brandWithId = shoppingQueryOutputPort.getBrandByBrandName("A")
 
-                    brandId shouldBe 1L
-                    brand.shouldNotBeNull()
+                    brandWithId?.id shouldBe 1L
+                    brandWithId?.name?.shouldBeEqual("A")
                 }
             }
         }

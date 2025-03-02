@@ -1,7 +1,7 @@
 package com.insuk.shopping.application.domain.usecase
 
+import com.insuk.shopping.application.domain.mapper.toDomain
 import com.insuk.shopping.application.domain.model.Product
-import com.insuk.shopping.application.domain.model.toProduct
 import com.insuk.shopping.application.port.input.ProductCommand
 import com.insuk.shopping.application.port.input.ProductDeleteCommand
 import com.insuk.shopping.application.port.input.ShoppingCommandInputPort
@@ -19,40 +19,41 @@ class ShoppingCommandUseCase(
     private val shoppingQueryOutputPort: ShoppingQueryOutputPort,
 ) : ShoppingCommandInputPort {
     override fun addProduct(command: ProductCommand): Product = runCatching {
-        val (brandId, brand) = shoppingCommandOutputPort.addBrand(command.brandName)
-        val (categoryId, category) = shoppingCommandOutputPort.addCategory(command.categoryName)
+        val brandWithId = shoppingCommandOutputPort.addBrand(command.brandName)
+        val categoryWithId = shoppingCommandOutputPort.addCategory(command.categoryName)
 
-        val (_, productOnly) = shoppingCommandOutputPort.addProduct(
+        val productWithId = shoppingCommandOutputPort.addProduct(
             price = command.price,
-            brandId = brandId,
-            categoryId = categoryId,
+            brandId = brandWithId.id,
+            categoryId = categoryWithId.id,
         )
 
-        productOnly.toProduct(
-            brand = brand,
-            category = category,
+        productWithId.toDomain(
+            brand = brandWithId.toDomain(),
+            category = categoryWithId.toDomain(),
         )
     }.getOrElse {
         throw UseCaseException(ADD_PRODUCT_EXCEPTION.errorMessage, it)
     }
 
     override fun updateProduct(command: ProductCommand): Product? {
-        val (brandId, brand) = shoppingQueryOutputPort.getBrandByBrandName(command.brandName)
-            .requireNotNullOrThrow("${CAN_NOT_FIND_BRAND_EXCEPTION.errorMessage} -> brandName: ${command.brandName}")
-
-        val (categoryId, category) = shoppingQueryOutputPort.getCategoryByCategoryName(command.categoryName)
-            .requireNotNullOrThrow("${CAN_NOT_FIND_CATEGORY_EXCEPTION.errorMessage} -> categoryName: ${command.categoryName}")
+        val brandWithId = requireNotNull(shoppingQueryOutputPort.getBrandByBrandName(command.brandName)) {
+            "${CAN_NOT_FIND_BRAND_EXCEPTION.errorMessage} -> brandName: ${command.brandName}"
+        }
+        val categoryWithId = requireNotNull(shoppingQueryOutputPort.getCategoryByCategoryName(command.categoryName)) {
+            "${CAN_NOT_FIND_CATEGORY_EXCEPTION.errorMessage} -> categoryName: ${command.categoryName}"
+        }
 
         return runCatching {
-            val (_, productOnly) = shoppingCommandOutputPort.modifyProduct(
+            val productWithId = shoppingCommandOutputPort.modifyProduct(
                 price = command.price,
-                brandId = brandId,
-                categoryId = categoryId,
+                brandId = brandWithId.id,
+                categoryId = categoryWithId.id,
             )
 
-            productOnly?.toProduct(
-                brand = brand,
-                category = category,
+            productWithId?.toDomain(
+                brand = brandWithId.toDomain(),
+                category = categoryWithId.toDomain(),
             )
         }.getOrElse {
             throw UseCaseException(UPDATE_PRODUCT_EXCEPTION.errorMessage, it)
@@ -60,26 +61,20 @@ class ShoppingCommandUseCase(
     }
 
     override fun deleteProduct(command: ProductDeleteCommand) {
-        val (brandId, _) = shoppingQueryOutputPort.getBrandByBrandName(command.brandName)
-            .requireNotNullOrThrow("${CAN_NOT_FIND_BRAND_EXCEPTION.errorMessage} -> brandName: ${command.brandName}")
-
-        val (categoryId, _) = shoppingQueryOutputPort.getCategoryByCategoryName(command.categoryName)
-            .requireNotNullOrThrow("${CAN_NOT_FIND_CATEGORY_EXCEPTION.errorMessage} -> categoryName: ${command.categoryName}")
+        val brandWithId = requireNotNull(shoppingQueryOutputPort.getBrandByBrandName(command.brandName)) {
+            "${CAN_NOT_FIND_BRAND_EXCEPTION.errorMessage} -> brandName: ${command.brandName}"
+        }
+        val categoryWithId = requireNotNull(shoppingQueryOutputPort.getCategoryByCategoryName(command.categoryName)) {
+            "${CAN_NOT_FIND_CATEGORY_EXCEPTION.errorMessage} -> categoryName: ${command.categoryName}"
+        }
 
         runCatching {
             shoppingCommandOutputPort.removeProduct(
-                brandId = brandId,
-                categoryId = categoryId,
+                brandId = brandWithId.id,
+                categoryId = categoryWithId.id,
             )
         }.getOrElse {
             throw UseCaseException(DELETE_PRODUCT_EXCEPTION.errorMessage, it)
         }
-    }
-
-    private fun <T> Pair<Long?, T?>.requireNotNullOrThrow(exceptionMessage: String): Pair<Long, T> {
-        val (id, entity) = this
-        requireNotNull(id) { exceptionMessage }
-        requireNotNull(entity) { exceptionMessage }
-        return id to entity
     }
 }

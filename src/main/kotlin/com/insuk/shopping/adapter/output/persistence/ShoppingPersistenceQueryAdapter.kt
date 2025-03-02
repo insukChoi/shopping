@@ -5,9 +5,7 @@ import com.insuk.shopping.adapter.output.persistence.entity.CategoryEntity
 import com.insuk.shopping.adapter.output.persistence.entity.ProductEntity
 import com.insuk.shopping.application.domain.model.*
 import com.insuk.shopping.application.domain.model.ProductOfBrandLowest.CategoryOfBrandLowest
-import com.insuk.shopping.application.port.output.BrandId
-import com.insuk.shopping.application.port.output.CategoryId
-import com.insuk.shopping.application.port.output.ShoppingQueryOutputPort
+import com.insuk.shopping.application.port.output.*
 import com.insuk.shopping.config.SHOPPING_TRANSACTION_MANAGER
 import org.jetbrains.exposed.sql.*
 import org.springframework.transaction.annotation.Transactional
@@ -83,40 +81,38 @@ class ShoppingPersistenceQueryAdapter : ShoppingQueryOutputPort {
     }
 
     // 카테고리 명으로 카테고리 ID 조회
-    override fun getCategoryByCategoryName(categoryName: String): Pair<CategoryId?, Category?> {
+    override fun getCategoryByCategoryName(categoryName: String): CategoryWIthId? {
         return CategoryEntity
             .selectAll()
             .where {
                 CategoryEntity.name eq categoryName
             }
             .map {
-                val categoryId = it[CategoryEntity.id].value
-                val category = Category(
+                CategoryWIthId(
+                    id = it[CategoryEntity.id].value,
                     name = it[CategoryEntity.name],
                     createdAt = it[CategoryEntity.createdAt],
                     updatedAt = it[CategoryEntity.updatedAt],
                 )
-                categoryId to category
-            }.firstOrNull() ?: (null to null)
+            }.firstOrNull()
     }
 
     // 브랜드 명으로 브랜드 ID 조회
-    override fun getBrandByBrandName(brandName: String): Pair<BrandId?, Brand?> {
+    override fun getBrandByBrandName(brandName: String): BrandWithId? {
         return BrandEntity
             .selectAll()
             .where {
                 BrandEntity.name eq brandName
             }
             .map {
-                val brandId = it[BrandEntity.id].value
-                val brand = Brand(
+                BrandWithId(
+                    id = it[BrandEntity.id].value,
                     name = it[BrandEntity.name],
                     createdAt = it[BrandEntity.createdAt],
                     updatedAt = it[BrandEntity.updatedAt],
                 )
-                brandId to brand
             }
-            .firstOrNull() ?: (null to null)
+            .firstOrNull()
     }
 
     // 카테고리 ID로 최저, 최고 가격 브랜드와 상품 가격 조회

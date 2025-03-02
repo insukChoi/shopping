@@ -30,11 +30,11 @@ class ShoppingQueryUseCase(
     }
 
     override fun loadLowestAndHighestPriceBrands(categoryName: String): ProductOfLowestAndHighestPriceBrands {
-        val categoryId = requireNotNull(shoppingQueryOutputPort.getCategoryByCategoryName(categoryName).first) {
+        val categoryWithId = requireNotNull(shoppingQueryOutputPort.getCategoryByCategoryName(categoryName)) {
             "${CAN_NOT_FIND_CATEGORY_EXCEPTION.errorMessage} -> categoryName: $categoryName"
         }
         return runCatching {
-            shoppingQueryOutputPort.getLowestAndHighestPriceBrands(categoryId)
+            shoppingQueryOutputPort.getLowestAndHighestPriceBrands(categoryWithId.id)
         }.getOrElse {
             throw UseCaseException(LOAD_LOWEST_HIGHEST_PRICE_BRANDS_EXCEPTION.errorMessage, it)
         }
