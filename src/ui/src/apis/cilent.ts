@@ -1,17 +1,47 @@
-import applyCaseMiddleware from 'axios-case-converter';
-import axios from 'axios';
-import queryString from 'query-string'
+import axios from "axios";
+import queryString from "query-string";
+import { camelCase, snakeCase, isObject, isArray, mapKeys, mapValues } from "lodash";
 
-export const shoppingApiClient = applyCaseMiddleware(
-    axios.create({
-        paramsSerializer(params: Record<string, any>) {
-            return queryString.stringify(params, {
-                skipNull: true,
-                skipEmptyString: true,
-            });
-        },
-    }),
-);
+const toSnakeCase = (obj) => {
+    if (isArray(obj)) {
+        return obj.map(toSnakeCase);
+    } else if (isObject(obj)) {
+        return mapValues(mapKeys(obj, (_, key) => snakeCase(key)), toSnakeCase);
+    }
+    return obj;
+};
 
+const toCamelCase = (obj) => {
+    if (isArray(obj)) {
+        return obj.map(toCamelCase);
+    } else if (isObject(obj)) {
+        return mapValues(mapKeys(obj, (_, key) => camelCase(key)), toCamelCase);
+    }
+    return obj;
+};
 
+const shoppingApiClient = axios.create({
+    paramsSerializer(params) {
+        return queryString.stringify(toSnakeCase(params), {
+            skipNull: true,
+            skipEmptyString: true,
+            encode: false,
+        });
+    },
+});
 
+shoppingApiClient.interceptors.request.use((config) => {
+    if (config.method === "get" && config.params) {
+        config.params = toSnakeCase(config.params);
+    }
+    return config;
+});
+
+shoppingApiClient.interceptors.response.use((response) => {
+    if (response.data) {
+        response.data = toCamelCase(response.data);
+    }
+    return response;
+});
+
+export { shoppingApiClient };

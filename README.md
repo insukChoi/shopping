@@ -185,8 +185,8 @@ POST /shopping/v1/product
 Content-Type: application/json
 
 {
-  "brand_name": "J",
-  "category_name": "벨트",
+  "brandName": "J",
+  "categoryName": "벨트",
   "price": 7000
 }
 ```
@@ -217,8 +217,8 @@ PATCH /shopping/v1/product
 Content-Type: application/json
 
 {
-  "brand_name": "A",
-  "category_name": "바지",
+  "brandName": "A",
+  "categoryName": "바지",
   "price": 2000
 }
 ```
@@ -249,8 +249,8 @@ DELETE /shopping/v1/product
 Content-Type: application/json
 
 {
-  "brand_name": "J",
-  "category_name": "벨트"
+  "brandName": "J",
+  "categoryName": "벨트"
 }
 ```
 
